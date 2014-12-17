@@ -1,5 +1,8 @@
 package Complete::Unix;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
@@ -16,10 +19,12 @@ our @EXPORT_OK = qw(
                        complete_pid
                );
 
-# DATE
-# VERSION
-
 our %SPEC;
+
+$SPEC{':package'} = {
+    v => 1.1,
+    summary => 'Unix-related completion routines',
+};
 
 $SPEC{complete_uid} = {
     v => 1.1,
@@ -161,7 +166,7 @@ sub complete_pid {
 }
 
 1;
-# ABSTRACT: Unix-related completion routines
+# ABSTRACT:
 
 =head1 DESCRIPTION
 
