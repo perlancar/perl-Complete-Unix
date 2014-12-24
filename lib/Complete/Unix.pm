@@ -8,6 +8,8 @@ use strict;
 use warnings;
 #use Log::Any '$log';
 
+use Complete;
+
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
@@ -31,7 +33,7 @@ $SPEC{complete_uid} = {
     summary => 'Complete from list of Unix UID\'s',
     args => {
         word    => { schema=>[str=>{default=>''}], pos=>0 },
-        ci      => { schema=>[bool=>{default=>0}] },
+        ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -45,13 +47,14 @@ sub complete_uid {
 
     my %args  = @_;
     my $word  = $args{word} // "";
+    my $ci    = $args{ci} // $Complete::OPT_CI;
 
     my $res = Unix::Passwd::File::list_users(
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{uid}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$args{ci});
+                word=>$args{word}, ci=>$ci);
 }
 
 $SPEC{complete_user} = {
@@ -59,7 +62,7 @@ $SPEC{complete_user} = {
     summary => 'Complete from list of Unix users',
     args => {
         word    => { schema=>[str=>{default=>''}], pos=>0 },
-        ci      => { schema=>[bool=>{default=>0}] },
+        ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -73,13 +76,14 @@ sub complete_user {
 
     my %args  = @_;
     my $word  = $args{word} // "";
+    my $ci    = $args{ci} // $Complete::OPT_CI;
 
     my $res = Unix::Passwd::File::list_users(
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{user}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$args{ci});
+                word=>$args{word}, ci=>$ci);
 }
 
 $SPEC{complete_gid} = {
@@ -87,7 +91,7 @@ $SPEC{complete_gid} = {
     summary => 'Complete from list of Unix GID\'s',
     args => {
         word    => { schema=>[str=>{default=>''}], pos=>0 },
-        ci      => { schema=>[bool=>{default=>0}] },
+        ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -101,13 +105,14 @@ sub complete_gid {
 
     my %args  = @_;
     my $word  = $args{word} // "";
+    my $ci    = $args{ci} // $Complete::OPT_CI;
 
     my $res = Unix::Passwd::File::list_groups(
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{gid}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$args{ci});
+                word=>$args{word}, ci=>$ci);
 }
 
 $SPEC{complete_group} = {
@@ -115,7 +120,7 @@ $SPEC{complete_group} = {
     summary => 'Complete from list of Unix groups',
     args => {
         word    => { schema=>[str=>{default=>''}], pos=>0 },
-        ci      => { schema=>[bool=>{default=>0}] },
+        ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -129,13 +134,14 @@ sub complete_group {
 
     my %args  = @_;
     my $word  = $args{word} // "";
+    my $ci    = $args{ci} // $Complete::OPT_CI;
 
     my $res = Unix::Passwd::File::list_groups(
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{group}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$args{ci});
+                word=>$args{word}, ci=>$ci);
 }
 
 $SPEC{complete_pid} = {
@@ -143,7 +149,7 @@ $SPEC{complete_pid} = {
     summary => 'Complete from list of running PIDs',
     args => {
         word    => { schema=>[str=>{default=>''}], pos=>0 },
-        ci      => { schema=>[bool=>{default=>0}] },
+        ci      => { schema=>['bool'] },
     },
     result_naked => 1,
     result => {
@@ -158,11 +164,12 @@ sub complete_pid {
 
     my %args  = @_;
     my $word  = $args{word} // "";
+    my $ci    = $args{ci} // $Complete::OPT_CI;
 
     my $procs = $pt->table;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{pid}} @$procs],
-                word=>$args{word}, ci=>$args{ci});
+                word=>$args{word}, ci=>$ci);
 }
 
 1;
