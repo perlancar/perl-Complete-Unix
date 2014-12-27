@@ -32,7 +32,7 @@ $SPEC{complete_uid} = {
     v => 1.1,
     summary => 'Complete from list of Unix UID\'s',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0 },
+        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
         ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
@@ -61,7 +61,7 @@ $SPEC{complete_user} = {
     v => 1.1,
     summary => 'Complete from list of Unix users',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0 },
+        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
         ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
@@ -90,7 +90,7 @@ $SPEC{complete_gid} = {
     v => 1.1,
     summary => 'Complete from list of Unix GID\'s',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0 },
+        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
         ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
@@ -119,7 +119,7 @@ $SPEC{complete_group} = {
     v => 1.1,
     summary => 'Complete from list of Unix groups',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0 },
+        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
         ci      => { schema=>['bool'] },
         etc_dir => { schema=>['str*'] },
     },
@@ -148,7 +148,7 @@ $SPEC{complete_pid} = {
     v => 1.1,
     summary => 'Complete from list of running PIDs',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0 },
+        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
         ci      => { schema=>['bool'] },
     },
     result_naked => 1,
