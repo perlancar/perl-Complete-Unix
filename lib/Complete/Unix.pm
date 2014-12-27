@@ -19,9 +19,15 @@ our @EXPORT_OK = qw(
                        complete_group
 
                        complete_pid
-               );
+                       complete_proc_name
+                );
 
 our %SPEC;
+
+our %common_args = (
+    word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
+    ci      => { schema=>['bool'] },
+);
 
 $SPEC{':package'} = {
     v => 1.1,
@@ -32,8 +38,7 @@ $SPEC{complete_uid} = {
     v => 1.1,
     summary => 'Complete from list of Unix UID\'s',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
-        ci      => { schema=>['bool'] },
+        %common_args,
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -54,15 +59,14 @@ sub complete_uid {
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{uid}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$ci);
+                word=>$word, ci=>$ci);
 }
 
 $SPEC{complete_user} = {
     v => 1.1,
     summary => 'Complete from list of Unix users',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
-        ci      => { schema=>['bool'] },
+        %common_args,
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -83,15 +87,14 @@ sub complete_user {
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{user}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$ci);
+                word=>$word, ci=>$ci);
 }
 
 $SPEC{complete_gid} = {
     v => 1.1,
     summary => 'Complete from list of Unix GID\'s',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
-        ci      => { schema=>['bool'] },
+        %common_args,
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -112,15 +115,14 @@ sub complete_gid {
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{gid}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$ci);
+                word=>$word, ci=>$ci);
 }
 
 $SPEC{complete_group} = {
     v => 1.1,
     summary => 'Complete from list of Unix groups',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
-        ci      => { schema=>['bool'] },
+        %common_args,
         etc_dir => { schema=>['str*'] },
     },
     result_naked => 1,
@@ -141,15 +143,14 @@ sub complete_group {
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array=>[map {$_->{group}} @{ $res->[2] }],
-                word=>$args{word}, ci=>$ci);
+                word=>$word, ci=>$ci);
 }
 
 $SPEC{complete_pid} = {
     v => 1.1,
     summary => 'Complete from list of running PIDs',
     args => {
-        word    => { schema=>[str=>{default=>''}], pos=>0, req=>1 },
-        ci      => { schema=>['bool'] },
+        %common_args,
     },
     result_naked => 1,
     result => {
@@ -158,18 +159,43 @@ $SPEC{complete_pid} = {
 };
 sub complete_pid {
     require Complete::Util;
-    require Proc::ProcessTable;
-
-    state $pt = Proc::ProcessTable->new;
+    require Proc::Find;
 
     my %args  = @_;
     my $word  = $args{word} // "";
     my $ci    = $args{ci} // $Complete::OPT_CI;
 
-    my $procs = $pt->table;
     Complete::Util::complete_array_elem(
-        array=>[map {$_->{pid}} @$procs],
-                word=>$args{word}, ci=>$ci);
+        array=>Proc::Find::find_proc(),
+                word=>$word, ci=>$ci);
+}
+
+$SPEC{complete_proc_name} = {
+    v => 1.1,
+    summary => 'Complete from list of process names',
+    args => {
+        %common_args,
+    },
+    result_naked => 1,
+    result => {
+        schema => 'array',
+    },
+};
+sub complete_proc_name {
+    require Complete::Util;
+    require List::MoreUtils;
+    require Proc::Find;
+
+    my %args  = @_;
+    my $word  = $args{word} // "";
+    my $ci    = $args{ci} // $Complete::OPT_CI;
+
+    Complete::Util::complete_array_elem(
+        array=>[List::MoreUtils::uniq(
+            grep {length}
+                map { $_->{name} }
+                    @{ Proc::Find::find_proc(detail=>1) })],
+        word=>$word, ci=>$ci);
 }
 
 1;
