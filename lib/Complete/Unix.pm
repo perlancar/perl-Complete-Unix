@@ -8,7 +8,7 @@ use strict;
 use warnings;
 #use Log::Any '$log';
 
-use Complete;
+use Complete::Setting;
 
 require Exporter;
 our @ISA = qw(Exporter);
@@ -52,7 +52,7 @@ sub complete_uid {
 
     my %args  = @_;
     my $word  = $args{word} // "";
-    my $ci    = $args{ci} // $Complete::OPT_CI;
+    my $ci    = $args{ci} // $Complete::Setting::OPT_CI;
 
     my $res = Unix::Passwd::File::list_users(
         etc_dir=>$args{etc_dir}, detail=>1);
@@ -80,7 +80,7 @@ sub complete_user {
 
     my %args  = @_;
     my $word  = $args{word} // "";
-    my $ci    = $args{ci} // $Complete::OPT_CI;
+    my $ci    = $args{ci} // $Complete::Setting::OPT_CI;
 
     my $res = Unix::Passwd::File::list_users(
         etc_dir=>$args{etc_dir}, detail=>1);
@@ -108,7 +108,7 @@ sub complete_gid {
 
     my %args  = @_;
     my $word  = $args{word} // "";
-    my $ci    = $args{ci} // $Complete::OPT_CI;
+    my $ci    = $args{ci} // $Complete::Setting::OPT_CI;
 
     my $res = Unix::Passwd::File::list_groups(
         etc_dir=>$args{etc_dir}, detail=>1);
@@ -136,7 +136,7 @@ sub complete_group {
 
     my %args  = @_;
     my $word  = $args{word} // "";
-    my $ci    = $args{ci} // $Complete::OPT_CI;
+    my $ci    = $args{ci} // $Complete::Setting::OPT_CI;
 
     my $res = Unix::Passwd::File::list_groups(
         etc_dir=>$args{etc_dir}, detail=>1);
@@ -163,7 +163,7 @@ sub complete_pid {
 
     my %args  = @_;
     my $word  = $args{word} // "";
-    my $ci    = $args{ci} // $Complete::OPT_CI;
+    my $ci    = $args{ci} // $Complete::Setting::OPT_CI;
 
     Complete::Util::complete_array_elem(
         array=>Proc::Find::find_proc(),
@@ -188,7 +188,7 @@ sub complete_proc_name {
 
     my %args  = @_;
     my $word  = $args{word} // "";
-    my $ci    = $args{ci} // $Complete::OPT_CI;
+    my $ci    = $args{ci} // $Complete::Setting::OPT_CI;
 
     Complete::Util::complete_array_elem(
         array=>[List::MoreUtils::uniq(
