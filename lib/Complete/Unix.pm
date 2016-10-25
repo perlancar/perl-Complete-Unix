@@ -20,6 +20,9 @@ our @EXPORT_OK = qw(
 
                        complete_pid
                        complete_proc_name
+
+                       complete_service_name
+                       complete_service_port
                 );
 
 our %SPEC;
@@ -185,6 +188,77 @@ sub complete_proc_name {
                 map { $_->{name} }
                     @{ Proc::Find::find_proc(detail=>1) })],
         word=>$word);
+}
+
+$SPEC{complete_service_name} = {
+    v => 1.1,
+    summary => 'Complete from list of service names from /etc/services',
+    args => {
+        %arg_word,
+    },
+    result_naked => 1,
+    result => {
+        schema => 'array',
+    },
+};
+sub complete_service_name {
+    require Parse::Services;
+
+    my %args  = @_;
+    my $word  = $args{word} // "";
+
+    my %services;
+
+    # from /etc/services
+    {
+        my $res = Parse::Services::parse_services();
+        last if $res->[0] != 200;
+        for my $row (@{ $res->[2] }) {
+            $services{$row->{name}}++;
+            $services{$_}++ for @{$row->{aliases}};
+        }
+    }
+
+    require Complete::Util;
+    Complete::Util::complete_hash_key(
+        word => $word,
+        hash => \%services,
+    );
+}
+
+$SPEC{complete_service_port} = {
+    v => 1.1,
+    summary => 'Complete from list of service ports from /etc/services',
+    args => {
+        %arg_word,
+    },
+    result_naked => 1,
+    result => {
+        schema => 'array',
+    },
+};
+sub complete_service_port {
+    require Parse::Services;
+
+    my %args  = @_;
+    my $word  = $args{word} // "";
+
+    my %services;
+
+    # from /etc/services
+    {
+        my $res = Parse::Services::parse_services();
+        last if $res->[0] != 200;
+        for my $row (@{ $res->[2] }) {
+            $services{$row->{port}}++;
+        }
+    }
+
+    require Complete::Util;
+    Complete::Util::complete_hash_key(
+        word => $word,
+        hash => \%services,
+    );
 }
 
 1;
