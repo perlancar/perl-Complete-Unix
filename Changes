@@ -1,9 +1,9 @@
-0.07    2016-10-26 (PERLANCAR)
+0.07    2016-10-26  Released-By: PERLANCAR
 
 	- Add functions: complete_service_{name,port}.
 
 
-0.06    2015-11-29 (PERLANCAR)
+0.06    2015-11-29  Released-By: PERLANCAR
 
 	- Adjust to Complete::Common 0.21.
 
@@ -12,7 +12,7 @@
 	  via Complete::Common.
 
 
-0.05    2015-09-09 (PERLANCAR)
+0.05    2015-09-09  Released-By: PERLANCAR
 
 	- No functional changes.
 
@@ -21,7 +21,7 @@
 	  requirement.
 
 
-0.04    2015-09-03 (PERLANCAR)
+0.04    2015-09-03  Released-By: PERLANCAR
 
 	- No functional changes.
 
@@ -30,16 +30,16 @@
 	  requirement.
 
 
-0.03    2014-12-27 (PERLANCAR)
+0.03    2014-12-27  Released-By: PERLANCAR
 
 	- Add function: complete_proc_name().
 
 
-0.02    2014-12-24 (PERLANCAR)
+0.02    2014-12-24  Released-By: PERLANCAR
 
 	- Follow convention of Complete 0.06.
 
 
-0.01    2014-06-29 (SHARYANTO)
+0.01    2014-06-29  Released-By: SHARYANTO
 
         - First release.
