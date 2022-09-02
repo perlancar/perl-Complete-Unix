@@ -1,17 +1,18 @@
 package Complete::Unix;
 
-# DATE
-# VERSION
-
 use 5.010001;
 use strict;
 use warnings;
 #use Log::Any '$log';
 
 use Complete::Common qw(:all);
+use Exporter 'import';
 
-require Exporter;
-our @ISA = qw(Exporter);
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
 our @EXPORT_OK = qw(
                        complete_uid
                        complete_user
@@ -55,8 +56,10 @@ sub complete_uid {
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
-        array=>[map {$_->{uid}} @{ $res->[2] }],
-        word=>$word);
+        array     => [map {$_->{uid}} @{ $res->[2] }],
+        summaries => [map {$_->{user}} @{ $res->[2] }],
+        word      => $word,
+    );
 }
 
 $SPEC{complete_user} = {
@@ -82,8 +85,9 @@ sub complete_user {
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
-        array=>[map {$_->{user}} @{ $res->[2] }],
-        word=>$word);
+        array     => [map {$_->{user}} @{ $res->[2] }],
+        summaries => [map {$_->{gecko}} @{ $res->[2] }],
+        word      => $word);
 }
 
 $SPEC{complete_gid} = {
@@ -109,8 +113,9 @@ sub complete_gid {
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
-        array=>[map {$_->{gid}} @{ $res->[2] }],
-        word=>$word);
+        array     => [map {$_->{gid}} @{ $res->[2] }],
+        summaries => [map {$_->{group}} @{ $res->[2] }],
+        word      => $word);
 }
 
 $SPEC{complete_group} = {
@@ -136,8 +141,8 @@ sub complete_group {
         etc_dir=>$args{etc_dir}, detail=>1);
     return undef unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
-        array=>[map {$_->{group}} @{ $res->[2] }],
-        word=>$word);
+        array     => [map {$_->{group}} @{ $res->[2] }],
+        word      => $word);
 }
 
 $SPEC{complete_pid} = {
@@ -158,9 +163,11 @@ sub complete_pid {
     my %args  = @_;
     my $word  = $args{word} // "";
 
+    my $procs = Proc::Find::find_proc(detail=>1);
     Complete::Util::complete_array_elem(
-        array=>Proc::Find::find_proc(),
-        word=>$word);
+        array     => [map {$_->{pid}} @$procs],
+        summaries => [map {$_->{cmndline}} @$procs],
+        word      => $word);
 }
 
 $SPEC{complete_proc_name} = {
@@ -250,7 +257,7 @@ sub complete_service_port {
         my $res = Parse::Services::parse_services();
         last if $res->[0] != 200;
         for my $row (@{ $res->[2] }) {
-            $services{$row->{port}}++;
+            $services{$row->{port}} = $row->{name};
         }
     }
 
@@ -258,6 +265,7 @@ sub complete_service_port {
     Complete::Util::complete_hash_key(
         word => $word,
         hash => \%services,
+        summaries_from_hash_values => 1,
     );
 }
 
