@@ -54,7 +54,7 @@ sub complete_uid {
 
     my $res = Unix::Passwd::File::list_users(
         etc_dir=>$args{etc_dir}, detail=>1);
-    return undef unless $res->[0] == 200;
+    return unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array     => [map {$_->{uid}} @{ $res->[2] }],
         summaries => [map {$_->{user}} @{ $res->[2] }],
@@ -83,7 +83,7 @@ sub complete_user {
 
     my $res = Unix::Passwd::File::list_users(
         etc_dir=>$args{etc_dir}, detail=>1);
-    return undef unless $res->[0] == 200;
+    return unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array     => [map {$_->{user}} @{ $res->[2] }],
         summaries => [map {$_->{gecko}} @{ $res->[2] }],
@@ -111,7 +111,7 @@ sub complete_gid {
 
     my $res = Unix::Passwd::File::list_groups(
         etc_dir=>$args{etc_dir}, detail=>1);
-    return undef unless $res->[0] == 200;
+    return unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array     => [map {$_->{gid}} @{ $res->[2] }],
         summaries => [map {$_->{group}} @{ $res->[2] }],
@@ -139,7 +139,7 @@ sub complete_group {
 
     my $res = Unix::Passwd::File::list_groups(
         etc_dir=>$args{etc_dir}, detail=>1);
-    return undef unless $res->[0] == 200;
+    return unless $res->[0] == 200;
     Complete::Util::complete_array_elem(
         array     => [map {$_->{group}} @{ $res->[2] }],
         word      => $word);
