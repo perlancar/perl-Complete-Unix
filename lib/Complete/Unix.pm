@@ -6,7 +6,7 @@ use warnings;
 use Log::ger;
 
 use Complete::Common qw(:all);
-use Exporter qw(import);
+use Exporter 'import';
 
 # AUTHORITY
 # DATE
