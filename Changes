@@ -1,3 +1,8 @@
+0.080   2022-09-08  Released-By: PERLANCAR; Urgency: medium
+
+        - [ux] Add summaries for completion answers.
+
+
 0.07    2016-10-26  Released-By: PERLANCAR
 
 	- Add functions: complete_service_{name,port}.
